@@ -5,11 +5,10 @@ const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
 
 const User = require('./../models/User.model');
+const { isLoggedOut, isLoggedIn } = require('../middleware');
 
-router.post('/signup', (req, res) => {
+router.post('/signup', isLoggedOut, (req, res) => {
 	const { username, password, role } = req.body;
-
-	if (req.session.currentUser) res.status(401).json({ code: 401, message: 'You are already logged' });
 
 	if (username.length <= 0 || username.match(/^\s*$/)) {
 		res.status(400).json({ code: 400, message: 'Username cannot be empty' });
@@ -37,17 +36,15 @@ router.post('/signup', (req, res) => {
 			User.create({ username, password: hashPass, role })
 				.then(user => {
 					req.session.currentUser = user;
-					res.json({ code: 200, message: 'User created' });
+					res.json(req.session.currentUser);
 				})
 				.catch(err => res.status(500).json({ code: 500, message: 'DB error while creating user', err }));
 		})
 		.catch(err => res.status(500).json({ code: 500, message: 'DB error while fetching user', err }));
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', isLoggedOut, (req, res) => {
 	const { username, password } = req.body;
-
-	if (req.session.currentUser) res.status(401).json({ code: 401, message: 'You are already logged' });
 
 	if (username.length <= 0 || username.match(/^\s*$/)) {
 		res.status(400).json({ code: 400, message: 'Username cannot be empty' });
@@ -75,7 +72,7 @@ router.post('/login', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error while fetching user', err }));
 });
 
-router.get('/logout', (req, res) => {
+router.get('/logout', isLoggedIn, (req, res) => {
 	req.session.destroy(
 		err =>
 			(!err && res.json({ message: 'Logout successful' })) ||

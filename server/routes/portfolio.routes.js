@@ -1,12 +1,14 @@
 // FIX - helpers and middleware for validation
 // FIX - unify like & dislike routes
+// FIX - adapt for query strings
 
 const express = require('express');
+const { isLoggedIn, checkRole } = require('../middleware');
 const router = express.Router();
 
 const PortfolioImage = require('./../models/PortfolioImage.model');
 
-router.get('/getAll', (req, res) => {
+router.get('/all', (req, res) => {
 	PortfolioImage.find()
 		.then(allImages => {
 			if (!allImages || allImages.length <= 0)
@@ -17,9 +19,21 @@ router.get('/getAll', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error fetching portfolio images', err }));
 });
 
-router.get('/getAll/currentArtist', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to get your portfolio images' });
+router.get('/all/limit-:limit', (req, res) => {
+	const { limit } = req.params;
 
+	PortfolioImage.find()
+		.limit(Number(limit))
+		.then(allImages => {
+			if (!allImages || allImages.length <= 0)
+				res.status(400).json({ code: 400, message: 'Could not find any portfolio images' });
+
+			res.json(allImages), 200;
+		})
+		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error fetching portfolio images', err }));
+});
+
+router.get('/all/currentArtist', isLoggedIn, (req, res) => {
 	PortfolioImage.find({ artist_id: req.session.currentUser._id })
 		.then(allImages => {
 			if (!allImages || allImages.length <= 0)
@@ -30,10 +44,7 @@ router.get('/getAll/currentArtist', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error fetching portfolio images', err }));
 });
 
-router.get('/getAll/:user_id', (req, res) => {
-	if (!req.session.currentUser)
-		res.status(401).json({ code: 401, message: 'You need to log in to get that user portfolio images' });
-
+router.get('/all/:user_id', isLoggedIn, (req, res) => {
 	PortfolioImage.find({ artist_id: req.params.user_id })
 		.then(allImages => {
 			if (!allImages || allImages.length <= 0)
@@ -44,23 +55,8 @@ router.get('/getAll/:user_id', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error fetching portfolio images', err }));
 });
 
-router.get('/getOne/:image_id', (req, res) => {
-	PortfolioImage.findById(req.params.image_id)
-		.then(image => {
-			if (!image) res.status(400).json({ code: 400, message: 'Not found any image for the specified id' });
-
-			res.json(image), 200;
-		})
-		.catch(err => res.status(500).json({ code: 500, message: `DDBB error fetching user for id ${req.params.job_id}`, err }));
-});
-
-router.post('/add-portfolio-image', (req, res) => {
+router.post('/portfolio-image', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	const { img_url, tags } = req.body;
-
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to add a portfolio image' });
-
-	if (req.session.currentUser.role != 'ARTIST')
-		res.status(401).json({ code: 401, message: 'You need to log in as artist to add a portfolio image' });
 
 	const { _id } = req.session.currentUser;
 
@@ -71,23 +67,25 @@ router.post('/add-portfolio-image', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: `DDBB error creating the portfolio image`, err }));
 });
 
-router.put('/:image_id/edit-portfolio-image', (req, res) => {
+router.get('/:image_id', (req, res) => {
+	PortfolioImage.findById(req.params.image_id)
+		.populate({ path: 'artist_id', select: ['portfolio.name', 'portfolio.last_name'] })
+		.then(image => {
+			if (!image) res.status(400).json({ code: 400, message: 'Not found any image for the specified id' });
+
+			res.json(image), 200;
+		})
+		.catch(err => res.status(500).json({ code: 500, message: `DDBB error fetching user for id ${req.params.job_id}`, err }));
+});
+
+router.put('/:image_id', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	const { img_url, tags } = req.body;
-
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to edit a portfolio image' });
-
-	if (req.session.currentUser.role != 'ARTIST')
-		res.status(401).json({ code: 401, message: 'You need to log in as artist to edit a portfolio image' });
 
 	const { _id } = req.session.currentUser;
 
 	if (!img_url || img_url.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A image url is mandatory' });
 
-	PortfolioImage.findOneAndUpdate(
-		{ _id: req.params.image_id, artist_id: req.session.currentUser._id },
-		{ img_url, tags },
-		{ new: true }
-	)
+	PortfolioImage.findOneAndUpdate({ _id: req.params.image_id, artist_id: _id }, { img_url, tags }, { new: true })
 		.then(image => {
 			if (!image)
 				res.status(400).json({ code: 400, message: 'There are no images with the specified id for the current user' });
@@ -97,14 +95,13 @@ router.put('/:image_id/edit-portfolio-image', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: `Could not update the job offer in the DDBB`, err }));
 });
 
-router.put('/:image_id/like', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to like an image' });
-
+router.put('/:image_id/like', isLoggedIn, (req, res) => {
 	PortfolioImage.findOneAndUpdate(
 		{ _id: req.params.image_id, liked: { $nin: req.session.currentUser._id } },
 		{ $inc: { likes: 1 }, $push: { liked: req.session.currentUser._id } },
 		{ new: true }
 	)
+		// .populate({ path: 'artist_id', select: ['name', 'last_name'] })
 		.then(image => {
 			if (!image) res.status(400).json({ code: 400, message: 'The current user already likes this image' });
 
@@ -115,9 +112,7 @@ router.put('/:image_id/like', (req, res) => {
 		);
 });
 
-router.put('/:image_id/dislike', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to dislike an image' });
-
+router.put('/:image_id/dislike', isLoggedIn, (req, res) => {
 	PortfolioImage.findOneAndUpdate(
 		{ _id: req.params.image_id, liked: { $in: req.session.currentUser._id } },
 		{ $inc: { likes: -1 }, $pull: { liked: req.session.currentUser._id } },
@@ -133,12 +128,7 @@ router.put('/:image_id/dislike', (req, res) => {
 		);
 });
 
-router.delete('/:image_id/delete', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to delete a portfolio image' });
-
-	if (req.session.currentUser.role != 'ARTIST')
-		res.status(401).json({ code: 401, message: 'You need to log in as artist to delete a job offer' });
-
+router.delete('/:image_id', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	PortfolioImage.findOneAndDelete({ _id: req.params.image_id, artist_id: req.session.currentUser._id })
 		.then(image => {
 			if (!image) res.status(400).json({ code: 400, message: 'The specified image did not exist for the current user' });

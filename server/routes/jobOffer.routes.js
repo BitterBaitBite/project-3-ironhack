@@ -1,22 +1,20 @@
 // FIX - helpers and middleware for validation
+// FIX - fix routes adapting them to the http verb
+// FIX - adapt for query strings
 
 const express = require('express');
+const { isLoggedIn, checkRole } = require('../middleware');
 const router = express.Router();
 
 const JobOffer = require('./../models/JobOffer.model');
 
-router.get('/getAll', (req, res) => {
+router.get('/all', (req, res) => {
 	JobOffer.find()
 		.then(allOffers => res.json(allOffers), 200)
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error fetching job offers', err }));
 });
 
-router.get('/getAll/applied', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to get your job offers' });
-
-	if (req.session.currentUser.role != 'ARTIST')
-		res.status(401).json({ code: 401, message: 'You need to log in as artist to see the job offers you applied to' });
-
+router.get('/all/applied', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	JobOffer.find({ applicants: { $in: req.session.currentUser._id } })
 		.then(allOffers => {
 			if (!allOffers || allOffers.length <= 0)
@@ -27,12 +25,7 @@ router.get('/getAll/applied', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error fetching job offers', err }));
 });
 
-router.get('/getAll/created', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to get your job offers' });
-
-	if (req.session.currentUser.role != 'RECRUITER')
-		res.status(401).json({ code: 401, message: 'You need to log in as recruiter to see your created job offers' });
-
+router.get('/all/created', isLoggedIn, checkRole('RECRUITER'), (req, res) => {
 	JobOffer.find({ recruiter_id: req.session.currentUser._id })
 		.then(allOffers => {
 			if (!allOffers || allOffers.length <= 0)
@@ -43,9 +36,7 @@ router.get('/getAll/created', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error fetching job offers', err }));
 });
 
-router.get('/getAll/applied/:user_id', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to get your job offers' });
-
+router.get('/all/applied/:user_id', isLoggedIn, (req, res) => {
 	JobOffer.find({ applicants: { $in: req.params.user_id } })
 		.then(allOffers => {
 			if (!allOffers || allOffers.length <= 0)
@@ -56,9 +47,7 @@ router.get('/getAll/applied/:user_id', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error fetching job offers', err }));
 });
 
-router.get('/getAll/created/:user_id', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to get your job offers' });
-
+router.get('/all/created/:user_id', isLoggedIn, (req, res) => {
 	JobOffer.find({ recruiter_id: req.params.user_id })
 		.then(allOffers => {
 			if (!allOffers || allOffers.length <= 0)
@@ -69,23 +58,8 @@ router.get('/getAll/created/:user_id', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error fetching job offers', err }));
 });
 
-router.get('/getOne/:job_id', (req, res) => {
-	JobOffer.findById(req.params.job_id)
-		.then(jobOffer => {
-			if (!jobOffer) res.status(400).json({ code: 400, message: 'Not found any job offer for the specified id' });
-
-			res.json(jobOffer), 200;
-		})
-		.catch(err => res.status(500).json({ code: 500, message: `DDBB error fetching user for id ${req.params.job_id}`, err }));
-});
-
-router.post('/create-job-offer', (req, res) => {
+router.post('/job-offer', isLoggedIn, checkRole('RECRUITER'), (req, res) => {
 	const { brand, title, description, tags } = req.body;
-
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to create a job offer' });
-
-	if (req.session.currentUser.role != 'RECRUITER')
-		res.status(401).json({ code: 401, message: 'You need to log in as recruiter to create a job offer' });
 
 	const { _id } = req.session.currentUser;
 
@@ -100,13 +74,18 @@ router.post('/create-job-offer', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: `DDBB error creating the job offer`, err }));
 });
 
-router.put('/:job_id/edit-job-offer', (req, res) => {
+router.get('/:job_id', (req, res) => {
+	JobOffer.findById(req.params.job_id)
+		.then(jobOffer => {
+			if (!jobOffer) res.status(400).json({ code: 400, message: 'Not found any job offer for the specified id' });
+
+			res.json(jobOffer), 200;
+		})
+		.catch(err => res.status(500).json({ code: 500, message: `DDBB error fetching user for id ${req.params.job_id}`, err }));
+});
+
+router.put('/:job_id', isLoggedIn, checkRole('RECRUITER'), (req, res) => {
 	const { brand, title, description, tags } = req.body;
-
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to create a job offer' });
-
-	if (req.session.currentUser.role != 'RECRUITER')
-		res.status(401).json({ code: 401, message: 'You need to log in as recruiter to create a job offer' });
 
 	if (!brand || brand.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A brand is mandatory' });
 
@@ -127,12 +106,7 @@ router.put('/:job_id/edit-job-offer', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: `Could not update the job offer in the DDBB`, err }));
 });
 
-router.put('/:job_id/apply', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to apply to a job offer' });
-
-	if (req.session.currentUser.role != 'ARTIST')
-		res.status(401).json({ code: 401, message: 'You need to log in as artist to apply to a job offer' });
-
+router.put('/:job_id/apply', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	JobOffer.findOneAndUpdate(
 		{ _id: req.params.job_id, applicants: { $nin: req.session.currentUser._id } },
 		{ $push: { applicants: req.session.currentUser._id } },
@@ -148,12 +122,7 @@ router.put('/:job_id/apply', (req, res) => {
 		);
 });
 
-router.put('/:job_id/quit', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to apply to a job offer' });
-
-	if (req.session.currentUser.role != 'ARTIST')
-		res.status(401).json({ code: 401, message: 'You need to log in as artist to apply to a job offer' });
-
+router.put('/:job_id/quit', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	JobOffer.findOneAndUpdate(
 		{ _id: req.params.job_id, applicants: { $in: req.session.currentUser._id } },
 		{ $pull: { applicants: req.session.currentUser._id } },
@@ -167,12 +136,7 @@ router.put('/:job_id/quit', (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: `DDBB error trying to remove the applicant`, err }));
 });
 
-router.delete('/:job_id/delete', (req, res) => {
-	if (!req.session.currentUser) res.status(401).json({ code: 401, message: 'You need to log in to delete a job offer' });
-
-	if (req.session.currentUser.role != 'RECRUITER')
-		res.status(401).json({ code: 401, message: 'You need to log in as recruiter to delete a job offer' });
-
+router.delete('/:job_id', isLoggedIn, checkRole('RECRUITER'), (req, res) => {
 	JobOffer.findOneAndDelete({ _id: req.params.job_id, recruiter_id: req.session.currentUser._id })
 		.then(jobOffer => {
 			if (!jobOffer) res.status(400).json({ code: 400, message: 'The job offer did not exist for the current user' });

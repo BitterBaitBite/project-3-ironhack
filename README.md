@@ -24,10 +24,10 @@ The app will have two main roles. These are:
 -   [ ] Navbar:
 
     -   [ ] It would feature the brand icon, as well as some links for users and recruiters logged
-    -   [ ] It would feature several links to useful resouces for artists (footer only?)
+    -   [ ] It would feature several links to useful resources for artists (footer only?)
         -   [ ] APIM
         -   [ ] Libros blancos (ilustración, animación y vfx, impresión 3D...)
-    -   [ ] For those guests not logged in, it will show the register and log options
+    -   [x] For those guests not logged in, it will show the register and log options
     -   [ ] For users logged it would feature a profile drop-down menu with:
 
         -   [ ] My profile
@@ -47,15 +47,15 @@ The app will have two main roles. These are:
 -   [ ] Home:
 
     -   [ ] It would show random and featured artwork from different artists. It is public and accesible for anyone
-    -   [ ] It would show
+    -   [x] It would show artwork
 
 ---
 
--   [ ] Log in
+-   [x] Log in
 
 ---
 
--   [ ] Sign up
+-   [x] Sign up
 
 ---
 
@@ -201,16 +201,17 @@ The app will have two main roles. These are:
 -   [x] App
 
     -   [ ] Navbar
-
-        -   [ ] Brand / Title logo
-        -   [ ] Navlink to SignupForm
-            -   [ ] SignupForm
-        -   [ ] Navlink to LoginForm
-            -   [ ] LoginForm
+        -   [x] Brand / Title logo
+        -   [x] Navlink to SignupForm
+            -   [x] SignupForm
+        -   [x] Navlink to LoginForm
+            -   [x] LoginForm
+        -   [x] Navlink to logout
         -   [ ] Navlink to ExplorePage
         -   [ ] Navlink to JobOffersPage
         -   [ ] Dropdown menu:
-
+            -   [x] Header My profile label
+            -   [ ] Header profile img
             -   [ ] Navlink to Profile
             -   [ ] Navlink to Portfolio
             -   [ ] Navlink to JobOffers
@@ -218,96 +219,62 @@ The app will have two main roles. These are:
 
     ***
 
-    -   [ ] Home:
-
-        -   [ ] SearchBox
-
-        -   [ ] PortfolioImage list: a number of portfolio images
+    -   [x] Home
+        -   [x] PortfolioImageList: a number of portfolio images
+            -   [x] PortfolioImageItem
+            -   [x] Link to PortfolioImageDetails
+                -   [x] PortfolioImageDetails
+                    -   [x] Like/dislike button depending on loggedUser (true | false - liked | disliked)
 
     ***
 
     -   [ ] Profile:
 
         -   [ ] PersonalInfo
-
         -   [ ] Link to EditProfileForm
-
         -   [ ] CreatorProfile:
-
             -   [ ] MyPortfolio: all portfolio data
-
             -   [ ] Link to MyJobOffers: list of:
-
                 -   [ ] JobOffer
-
                 -   [ ] Link to JobOfferDetails
-
                     -   [ ] JobOfferDetails
-
                         -   ([ ] ApplyButton) as the component, it will have it, but will no show since the user has already applied
-
                         -   [ ] QuitButton
-
             -   [ ] Link to EditPortfolioForm
-
             -   [ ] EditProfileForm
-
             -   [ ] EditPortfolioForm
-
         -   [ ] RecruiterProfile:
-
             -   [ ] MyJobOffers: list of:
-
                 -   [ ] JobOffer
-
                 -   [ ] Link to JobOfferDetails
-
                     -   [ ] JobOfferDetails
-
                     -   [ ] Link to EditJobOfferForm
-
                 -   [ ] EditJobOfferForm
-
             -   [ ] Link to NewJobOfferForm
-
             -   [ ] NewJobOfferForm
 
     ***
 
     -   [ ] ExplorePage
-
         -   [ ] SearchBox
-
         -   [ ] PortfolioImageList:
-
-            -   [ ] PortfolioImage
-
-            -   [ ] Link to Portfolio (a PortfolioImage have the artist id)
-
-                -   [ ] Portfolio
-
+            -   [ ] PortfolioImageItem
+            -   [x] Link to PortfolioImageDetails
+                -   [x] PortfolioImageDetails
+                    -   [x] Like/dislike button depending on loggedUser (true | false - liked | disliked)
                 -   [ ] Link to EditPortfolioForm => if artist equals the user seeing it/session user
-
                 -   [ ] Link to ContactForm => if recruiter user
 
     ***
 
     -   [ ] JobOffersPage
-
         -   [ ] SearchBox
-
         -   [ ] JobOfferList:
-
             -   [ ] JobOffer
-
             -   [ ] Link to JobOfferDetails
-
                 -   [ ] JobOfferDetails
-
                 -   [ ] Link to EditJobOfferForm => if recruiter equals the user seeing it/session user
-
                 -   [ ] ApplyButton
-
                 -   [ ] QuitButton
 
     ***

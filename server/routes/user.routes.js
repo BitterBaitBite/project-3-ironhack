@@ -1,4 +1,5 @@
 // FIX - helpers and middleware for validation
+// FIX - adapt for query strings
 
 const express = require('express');
 const router = express.Router();
@@ -7,20 +8,15 @@ const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
 
 const User = require('./../models/User.model');
+const { isLoggedIn } = require('../middleware');
 
-router.get('/getAll', (req, res) => {
+router.get('/all', (req, res) => {
 	User.find()
 		.then(allUsers => res.json(allUsers), 200)
 		.catch(err => res.status(500).json({ code: 500, message: 'Error fetching users', err }));
 });
 
-router.get('/getOne/:user_id', (req, res) => {
-	User.findById(req.params.user_id)
-		.then(user => res.json(user), 200)
-		.catch(err => res.status(500).json({ code: 500, message: `Error fetching user for id ${req.params.user_id}`, err }));
-});
-
-router.put('/edit-profile', (req, res) => {
+router.put('/user-profile', isLoggedIn, (req, res) => {
 	const { username, oldPassword, newPassword } = req.body;
 
 	if (username.length <= 0 || username.match(/^\s*$/)) {
@@ -33,13 +29,6 @@ router.put('/edit-profile', (req, res) => {
 
 	User.findOne({ username })
 		.then(user => {
-			console.log(req.session.currentUser._id);
-
-			if (!req.session.currentUser) {
-				res.status(401).json({ code: 400, message: 'No user logged' });
-				return;
-			}
-
 			if (user && !user._id.equals(req.session.currentUser._id)) {
 				res.status(400).json({ code: 400, message: 'Username already exists' });
 				return;
@@ -66,20 +55,15 @@ router.put('/edit-profile', (req, res) => {
 					})
 				);
 		})
-		.catch(err => {
-			console.log(err);
-			res.status(500).json({ code: 500, message: 'DDBB error while fetching user', err });
-		});
+		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error while fetching user', err }));
 });
 
-router.put('/update-portfolio', (req, res) => {
+router.put('/user-portfolio', isLoggedIn, (req, res) => {
 	const { name, last_name, country, city, about, email, tel, tags, experience } = req.body;
 
 	if (!name || name.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A name is mandatory' });
 
 	if (!last_name || last_name.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A last name is mandatory' });
-
-	if (!req.session.currentUser) res.status(400).json({ code: 400, message: 'You need to log in to create a portfolio' });
 
 	if (req.session.currentUser.role != 'ARTIST')
 		res.status(401).json({ code: 401, message: 'You need to log in as artist to create a job offer' });
@@ -96,6 +80,12 @@ router.put('/update-portfolio', (req, res) => {
 			return res.json(user), 200;
 		})
 		.catch(err => res.status(500).json({ code: 500, message: `Error updating the portfolio for user with id ${_id}`, err }));
+});
+
+router.get('/:user_id', (req, res) => {
+	User.findById(req.params.user_id)
+		.then(user => res.json(user), 200)
+		.catch(err => res.status(500).json({ code: 500, message: `Error fetching user for id ${req.params.user_id}`, err }));
 });
 
 module.exports = router;
