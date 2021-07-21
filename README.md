@@ -343,3 +343,5 @@ The app will have two main roles. These are:
                 -   ApplyButton
                 -   QuitButton
     -   Footer
+
+<!--  -->
