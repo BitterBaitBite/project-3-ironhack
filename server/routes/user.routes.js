@@ -42,7 +42,7 @@ router.put('/user-profile', isLoggedIn, (req, res) => {
 			const salt = bcrypt.genSaltSync(bcryptSalt);
 			const hashPass = bcrypt.hashSync(newPassword, salt);
 
-			User.findByIdAndUpdate(req.session.currentUser._id, { username, password: hashPass })
+			User.findByIdAndUpdate(req.session.currentUser._id, { username, password: hashPass }, { new: true })
 				.then(user => {
 					req.session.currentUser = user;
 					return res.json(user), 200;

@@ -200,22 +200,20 @@ The app will have two main roles. These are:
 
 -   [x] App
 
-    -   [ ] Navbar
+    -   [x] Navbar
         -   [x] Brand / Title logo
         -   [x] Navlink to SignupForm
             -   [x] SignupForm
         -   [x] Navlink to LoginForm
             -   [x] LoginForm
-        -   [x] Navlink to logout
-        -   [ ] Navlink to ExplorePage
-        -   [ ] Navlink to JobOffersPage
-        -   [ ] Dropdown menu:
+        -   [x] Navlink to ExplorePage
+        -   [x] Navlink to JobOffersPage
+        -   [x] Dropdown menu:
             -   [x] Header My profile label
-            -   [ ] Header profile img
-            -   [ ] Navlink to Profile
-            -   [ ] Navlink to Portfolio
-            -   [ ] Navlink to JobOffers
-            -   [ ] Log out navlink
+            -   [x] Navlink to Profile
+            -   [x] Navlink to Portfolio
+            -   [x] Navlink to JobOffers
+            -   [x] Log out navlink
 
     ***
 
@@ -229,20 +227,19 @@ The app will have two main roles. These are:
     ***
 
     -   [ ] Profile:
-
-        -   [ ] PersonalInfo
-        -   [ ] Link to EditProfileForm
-        -   [ ] CreatorProfile:
-            -   [ ] MyPortfolio: all portfolio data
+        -   [x] PersonalInfo
+        -   [x] EditProfileForm Modal
+        -   [ ] ArtistProfile:
+            -   [x] MyPortfolio: all portfolio data
             -   [ ] Link to MyJobOffers: list of:
                 -   [ ] JobOffer
                 -   [ ] Link to JobOfferDetails
                     -   [ ] JobOfferDetails
                         -   ([ ] ApplyButton) as the component, it will have it, but will no show since the user has already applied
                         -   [ ] QuitButton
-            -   [ ] Link to EditPortfolioForm
-            -   [ ] EditProfileForm
-            -   [ ] EditPortfolioForm
+            -   [x] Link to EditPortfolioForm
+            -   [x] EditProfileForm
+            -   [x] EditPortfolioForm
         -   [ ] RecruiterProfile:
             -   [ ] MyJobOffers: list of:
                 -   [ ] JobOffer
