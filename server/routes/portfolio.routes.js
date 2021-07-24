@@ -86,6 +86,7 @@ router.put('/:image_id', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	if (!img_url || img_url.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A image url is mandatory' });
 
 	PortfolioImage.findOneAndUpdate({ _id: req.params.image_id, artist_id: _id }, { img_url, tags }, { new: true })
+		.populate({ path: 'artist_id', select: ['portfolio.name', 'portfolio.last_name'] })
 		.then(image => {
 			if (!image)
 				res.status(400).json({ code: 400, message: 'There are no images with the specified id for the current user' });

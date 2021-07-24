@@ -222,6 +222,7 @@ The app will have two main roles. These are:
             -   [x] PortfolioImageItem
             -   [x] Link to PortfolioImageDetails
                 -   [x] PortfolioImageDetails
+                    -   [x] Tags
                     -   [x] Like/dislike button depending on loggedUser (true | false - liked | disliked)
 
     ***
@@ -232,6 +233,16 @@ The app will have two main roles. These are:
         -   [ ] ArtistProfile:
             -   [x] MyPortfolio: all portfolio data
             -   [x] MyGallery: all images for current artist user
+                -   [x] PortfolioImageList: user portfolio images
+                    -   [x] PortfolioImageItem
+                    -   [x] Link to PortfolioImageDetails
+                        -   [x] PortfolioImageDetails
+                            -   [x] Tags
+                            -   [x] Tag control:
+                                -   [x] Delete button
+                                -   [x] Add button
+                            -   [x] Like/dislike button
+                            -   [x] Delete button
             -   [ ] Link to MyJobOffers: list of:
                 -   [ ] JobOffer
                 -   [ ] Link to JobOfferDetails
