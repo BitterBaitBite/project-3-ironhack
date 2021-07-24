@@ -231,6 +231,7 @@ The app will have two main roles. These are:
         -   [x] EditProfileForm Modal
         -   [ ] ArtistProfile:
             -   [x] MyPortfolio: all portfolio data
+            -   [x] MyGallery: all images for current artist user
             -   [ ] Link to MyJobOffers: list of:
                 -   [ ] JobOffer
                 -   [ ] Link to JobOfferDetails
