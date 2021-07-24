@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
 
 const User = require('./../models/User.model');
-const { isLoggedIn } = require('../middleware');
+const { isLoggedIn, checkRole } = require('../middleware');
 
 router.get('/all', (req, res) => {
 	User.find()
@@ -58,24 +58,18 @@ router.put('/user-profile', isLoggedIn, (req, res) => {
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error while fetching user', err }));
 });
 
-router.put('/user-portfolio', isLoggedIn, (req, res) => {
-	const { name, last_name, country, city, about, email, tel, tags, experience } = req.body;
-
-	if (!name || name.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A name is mandatory' });
-
-	if (!last_name || last_name.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A last name is mandatory' });
-
-	if (req.session.currentUser.role != 'ARTIST')
-		res.status(401).json({ code: 401, message: 'You need to log in as artist to create a job offer' });
-
+router.put('/user-portfolio', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	const { _id } = req.session.currentUser;
 
-	User.findByIdAndUpdate(
-		_id,
-		{ portfolio: { name, last_name, country, city, about, email, tel, tags, experience } },
-		{ new: true }
-	)
+	// const { name, last_name } = req.body;
+
+	// if (!name || name.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A name is mandatory' });
+
+	// if (!last_name || last_name.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A last name is mandatory' });
+
+	User.findByIdAndUpdate(_id, { portfolio: req.body }, { new: true })
 		.then(user => {
+			console.log(_id, user);
 			req.session.currentUser = user;
 			return res.json(user), 200;
 		})
