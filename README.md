@@ -230,7 +230,7 @@ The app will have two main roles. These are:
     -   [ ] Profile:
         -   [x] PersonalInfo
         -   [x] EditProfileForm Modal
-        -   [ ] ArtistProfile:
+        -   [x] ArtistProfile:
             -   [x] MyPortfolio: all portfolio data
             -   [x] MyGallery: all images for current artist user
                 -   [x] PortfolioImageList: user portfolio images
@@ -252,39 +252,38 @@ The app will have two main roles. These are:
             -   [x] Link to EditPortfolioForm
             -   [x] EditProfileForm
             -   [x] EditPortfolioForm
-        -   [ ] RecruiterProfile:
-            -   [ ] MyJobOffers: list of:
-                -   [ ] JobOffer
-                -   [ ] Link to JobOfferDetails
-                    -   [ ] JobOfferDetails
-                    -   [ ] Link to EditJobOfferForm
+        -   [x] RecruiterProfile:
+            -   [x] MyJobOffers: list of:
+                -   [x] JobOffer
+                -   [x] Link to JobOfferDetails
+                    -   [x] JobOfferDetails
+                    -   [x] Link to EditJobOfferForm
                 -   [ ] EditJobOfferForm
-            -   [ ] Link to NewJobOfferForm
-            -   [ ] NewJobOfferForm
+            -   [x] Link to NewJobOfferForm
+            -   [x] NewJobOfferForm
 
     ***
 
     -   [ ] ExplorePage
         -   [ ] SearchBox
-        -   [ ] PortfolioImageList:
-            -   [ ] PortfolioImageItem
+        -   [x] PortfolioImageList:
+            -   [x] PortfolioImageItem
             -   [x] Link to PortfolioImageDetails
                 -   [x] PortfolioImageDetails
                     -   [x] Like/dislike button depending on loggedUser (true | false - liked | disliked)
-                -   [ ] Link to EditPortfolioForm => if artist equals the user seeing it/session user
-                -   [ ] Link to ContactForm => if recruiter user
+                -   [x] Link to EditPortfolioForm => if artist equals the user seeing it/session user
 
     ***
 
     -   [ ] JobOffersPage
         -   [ ] SearchBox
-        -   [ ] JobOfferList:
-            -   [ ] JobOffer
-            -   [ ] Link to JobOfferDetails
-                -   [ ] JobOfferDetails
-                -   [ ] Link to EditJobOfferForm => if recruiter equals the user seeing it/session user
-                -   [ ] ApplyButton
-                -   [ ] QuitButton
+        -   [x] JobOfferList:
+            -   [x] JobOffer
+            -   [x] Link to JobOfferDetails
+                -   [x] JobOfferDetails
+                -   [x] Link to EditJobOfferForm => if recruiter equals the user seeing it/session user
+                -   [x] ApplyButton
+                -   [x] QuitButton
 
     ***
 

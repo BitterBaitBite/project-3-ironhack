@@ -23,6 +23,7 @@ router.get('/all/limit-:limit', (req, res) => {
 	const { limit } = req.params;
 
 	PortfolioImage.find()
+		.sort({ likes: -1 })
 		.limit(Number(limit))
 		.then(allImages => {
 			if (!allImages || allImages.length <= 0)

@@ -76,6 +76,10 @@ router.post('/job-offer', isLoggedIn, checkRole('RECRUITER'), (req, res) => {
 
 router.get('/:job_id', (req, res) => {
 	JobOffer.findById(req.params.job_id)
+		.populate({
+			path: 'applicants',
+			select: '_id portfolio',
+		})
 		.then(jobOffer => {
 			if (!jobOffer) res.status(400).json({ code: 400, message: 'Not found any job offer for the specified id' });
 
