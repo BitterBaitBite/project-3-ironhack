@@ -243,12 +243,12 @@ The app will have two main roles. These are:
                                 -   [x] Add button
                             -   [x] Like/dislike button
                             -   [x] Delete button
-            -   [ ] Link to MyJobOffers: list of:
-                -   [ ] JobOffer
-                -   [ ] Link to JobOfferDetails
-                    -   [ ] JobOfferDetails
-                        -   ([ ] ApplyButton) as the component, it will have it, but will no show since the user has already applied
-                        -   [ ] QuitButton
+            -   [x] Link to MyJobOffers: list of:
+                -   [x] JobOffer
+                -   [x] Link to JobOfferDetails
+                    -   [x] JobOfferDetails
+                        -   ([x] ApplyButton) as the component, it will have it, but will no show since the user has already applied
+                        -   [x] QuitButton
             -   [x] Link to EditPortfolioForm
             -   [x] EditProfileForm
             -   [x] EditPortfolioForm
