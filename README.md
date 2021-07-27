@@ -21,11 +21,11 @@ The app will have two main roles. These are:
 
 ## PAGES
 
--   [ ] Navbar:
+-   [x] Navbar:
 
-    -   [ ] It would feature the brand icon, as well as some links for users and recruiters logged
-    -   [ ] It would feature several links to useful resources for artists (footer only?)
-        -   [ ] APIM
+    -   [x] It would feature the brand icon, as well as some links for users and recruiters logged
+    -   [x] It would feature several links to useful resources for artists (footer only?)
+        -   [x] APIM
         -   [ ] Libros blancos (ilustración, animación y vfx, impresión 3D...)
     -   [x] For those guests not logged in, it will show the register and log options
     -   [ ] For users logged it would feature a profile drop-down menu with:
@@ -227,7 +227,7 @@ The app will have two main roles. These are:
 
     ***
 
-    -   [ ] Profile:
+    -   [x] Profile:
         -   [x] PersonalInfo
         -   [x] EditProfileForm Modal
         -   [x] ArtistProfile:
@@ -264,8 +264,8 @@ The app will have two main roles. These are:
 
     ***
 
-    -   [ ] ExplorePage
-        -   [ ] SearchBox
+    -   [x] ExplorePage
+        -   [x] SearchBox
         -   [x] PortfolioImageList:
             -   [x] PortfolioImageItem
             -   [x] Link to PortfolioImageDetails
@@ -275,8 +275,8 @@ The app will have two main roles. These are:
 
     ***
 
-    -   [ ] JobOffersPage
-        -   [ ] SearchBox
+    -   [x] JobOffersPage
+        -   [x] SearchBox
         -   [x] JobOfferList:
             -   [x] JobOffer
             -   [x] Link to JobOfferDetails
@@ -287,7 +287,7 @@ The app will have two main roles. These are:
 
     ***
 
-    -   [ ] Footer
+    -   [x] Footer
 
 ## COMPONENTS HIERARCHY
 

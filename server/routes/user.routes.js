@@ -12,7 +12,7 @@ const { isLoggedIn, checkRole } = require('../middleware');
 
 router.get('/all', (req, res) => {
 	User.find()
-		.then(allUsers => res.json(allUsers), 200)
+		.then(allUsers => res.json(allUsers))
 		.catch(err => res.status(500).json({ code: 500, message: 'Error fetching users', err }));
 });
 
@@ -45,7 +45,7 @@ router.put('/user-profile', isLoggedIn, (req, res) => {
 			User.findByIdAndUpdate(req.session.currentUser._id, { username, password: hashPass }, { new: true })
 				.then(user => {
 					req.session.currentUser = user;
-					return res.json(user), 200;
+					return res.json(user);
 				})
 				.catch(err =>
 					res.status(500).json({
@@ -71,14 +71,14 @@ router.put('/user-portfolio', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 		.then(user => {
 			console.log(_id, user);
 			req.session.currentUser = user;
-			return res.json(user), 200;
+			return res.json(user);
 		})
 		.catch(err => res.status(500).json({ code: 500, message: `Error updating the portfolio for user with id ${_id}`, err }));
 });
 
 router.get('/:user_id', (req, res) => {
 	User.findById(req.params.user_id)
-		.then(user => res.json(user), 200)
+		.then(user => res.json(user))
 		.catch(err => res.status(500).json({ code: 500, message: `Error fetching user for id ${req.params.user_id}`, err }));
 });
 
