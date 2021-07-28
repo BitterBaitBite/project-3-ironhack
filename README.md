@@ -2,7 +2,7 @@
 
 ## THE IDEA
 
-The idea of the project is to create a single page application with React. The theme of this app is creating a platform for artists to create and show a standard portfolio, as well as all the necessary information and tools to be contacted with in order to get a job or projects to work in.
+The idea of the project is to create a single page application using React alongside Express.js, Node.js and MongoDB on the server side. The theme of this app is creating a platform for artists to create and show a standard portfolio, as well as all the necessary information and tools to be contacted with in order to get a job or projects to work in.
 
 This platform will also have the option to join as a recruiter, with several options to look for specific perks and skills within all the registered artists.
 
@@ -28,23 +28,23 @@ The app will have two main roles. These are:
         -   [x] APIM
         -   [ ] Libros blancos (ilustración, animación y vfx, impresión 3D...)
     -   [x] For those guests not logged in, it will show the register and log options
-    -   [ ] For users logged it would feature a profile drop-down menu with:
+    -   [x] For logged users it would feature a navlink to published job offers
+    -   [x] For users logged it would feature a profile drop-down menu with:
 
-        -   [ ] My profile
-        -   [ ] My portfolio
-        -   [ ] Log out
+        -   [x] My profile
+        -   [x] My portfolio
+        -   [x] My job offers
+        -   [x] Log out
 
-    -   [ ] For logged recruiters it would feature a profile drop-down menu with:
+    -   [x] For logged recruiters it would feature a profile drop-down menu with:
 
-        -   [ ] My profile
-        -   [ ] My job offers
-        -   [ ] Log out
-
-    -   [ ] For logged users it would feature a navlink to published job offers
+        -   [x] My profile
+        -   [x] My job offers
+        -   [x] Log out
 
 ---
 
--   [ ] Home:
+-   [x] Home:
 
     -   [ ] It would show random and featured artwork from different artists. It is public and accesible for anyone
     -   [x] It would show artwork
@@ -59,23 +59,23 @@ The app will have two main roles. These are:
 
 ---
 
--   [ ] My profile: to see oneself user info, with the option to edit it
+-   [x] My profile: to see oneself user info, with the option to edit it
 
 ---
 
--   [ ] My portfolio: to see oneself uploaded artwork and data -
+-   [x] My portfolio: to see oneself uploaded artwork and data -
 
 ---
 
--   [ ] My job offers: to see oneself published job offers
+-   [x] My job offers: to see oneself published or applied to job offers
 
 ---
 
--   [ ] Explore: to see artwork, with a search form to filter. This search will be very basic for users (text input filter for title, artist and tags), but will have additional filters for recruiters:
+-   [x] Explore: to see artwork, with a search form to filter. This search will be very basic for users (text input filter for title, artist and tags), but will have additional filters for recruiters:
 
-    -   [ ] Basic search for artist
-    -   [ ] Basic search for title
-    -   [ ] Basic search for tags
+    -   [x] Basic search for artist
+    -   [x] Basic search for title
+    -   [x] Basic search for tags
 
     -   [ ] Advanced search for country
     -   [ ] Advanced search for city
@@ -84,23 +84,19 @@ The app will have two main roles. These are:
 
 ---
 
--   [ ] Job offers: an explorer of job offers, with a search form to filter. This search will be equal for all users:
+-   [x] Job offers: an explorer of job offers, with a search form to filter. This search will be equal for all users:
 
-    -   [ ] Search for tags
-    -   [ ] Search for title keywords
-    -   [ ] Search for description keywords
-
----
-
--   [ ] Contact page for recruiters who want to contact artist users
+    -   [x] Search for tags
+    -   [x] Search for title keywords
+    -   [x] Search for description keywords
 
 ---
 
--   [ ] Footer
-    -   [ ] It would feature several links to useful resouces for artists
-        -   [ ] APIM
+-   [x] Footer
+    -   [x] It would feature several links to useful resources for artists
+        -   [x] Illustration associations
         -   [ ] Libros blancos (ilustración, animación y vfx, impresión 3D...)
-    -   [ ] About
+    -   [x] About
     -   [ ] Licenses ( ? )
 
 ---
