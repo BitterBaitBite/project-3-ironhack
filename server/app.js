@@ -12,4 +12,6 @@ require('./config/session.config')(app);
 
 require('./routes')(app);
 
+app.use((req, res) => res.sendFile(__dirname + '/public'));
+
 module.exports = app;
