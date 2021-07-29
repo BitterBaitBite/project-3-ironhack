@@ -27,8 +27,10 @@ router.get('/all', (req, res) => {
 router.get('/all/applied', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	JobOffer.find({ applicants: { $in: req.session.currentUser._id } })
 		.then(allOffers => {
-			if (!allOffers || allOffers.length <= 0)
+			if (!allOffers || allOffers.length <= 0) {
 				res.status(400).json({ code: 400, message: 'The current user does not have job offers' });
+				return;
+			}
 
 			res.json(allOffers);
 		})
@@ -38,8 +40,10 @@ router.get('/all/applied', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 router.get('/all/created', isLoggedIn, checkRole('RECRUITER'), (req, res) => {
 	JobOffer.find({ recruiter_id: req.session.currentUser._id })
 		.then(allOffers => {
-			if (!allOffers || allOffers.length <= 0)
+			if (!allOffers || allOffers.length <= 0) {
 				res.status(400).json({ code: 400, message: 'The current user does not have job offers' });
+				return;
+			}
 
 			res.json(allOffers);
 		})
@@ -49,8 +53,10 @@ router.get('/all/created', isLoggedIn, checkRole('RECRUITER'), (req, res) => {
 router.get('/all/applied/:user_id', isLoggedIn, (req, res) => {
 	JobOffer.find({ applicants: { $in: req.params.user_id } })
 		.then(allOffers => {
-			if (!allOffers || allOffers.length <= 0)
+			if (!allOffers || allOffers.length <= 0) {
 				res.status(400).json({ code: 400, message: 'The specified user has not applied to any job offer' });
+				return;
+			}
 
 			res.json(allOffers);
 		})
@@ -60,8 +66,10 @@ router.get('/all/applied/:user_id', isLoggedIn, (req, res) => {
 router.get('/all/created/:user_id', isLoggedIn, (req, res) => {
 	JobOffer.find({ recruiter_id: req.params.user_id })
 		.then(allOffers => {
-			if (!allOffers || allOffers.length <= 0)
+			if (!allOffers || allOffers.length <= 0) {
 				res.status(400).json({ code: 400, message: 'The specified user does not have created job offers' });
+				return;
+			}
 
 			res.json(allOffers);
 		})
@@ -73,11 +81,20 @@ router.post('/job-offer', isLoggedIn, checkRole('RECRUITER'), (req, res) => {
 
 	const { _id } = req.session.currentUser;
 
-	if (!brand || brand.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A brand is mandatory' });
+	if (!brand || brand.match(/^\s*$/)) {
+		res.status(400).json({ code: 400, message: 'A brand is mandatory' });
+		return;
+	}
 
-	if (!title || title.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A title is mandatory' });
+	if (!title || title.match(/^\s*$/)) {
+		res.status(400).json({ code: 400, message: 'A title is mandatory' });
+		return;
+	}
 
-	if (!description || description.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A description is mandatory' });
+	if (!description || description.match(/^\s*$/)) {
+		res.status(400).json({ code: 400, message: 'A description is mandatory' });
+		return;
+	}
 
 	JobOffer.create({ recruiter_id: _id, brand, title, description, tags })
 		.then(jobOffer => res.json(jobOffer))

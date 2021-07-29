@@ -34,8 +34,10 @@ router.get('/all/limit-:limit', (req, res) => {
 		.sort({ likes: -1 })
 		.limit(Number(limit))
 		.then(allImages => {
-			if (!allImages || allImages.length <= 0)
+			if (!allImages || allImages.length <= 0) {
 				res.status(400).json({ code: 400, message: 'Could not find any portfolio images' });
+				return;
+			}
 
 			res.json(allImages);
 		})
@@ -45,8 +47,10 @@ router.get('/all/limit-:limit', (req, res) => {
 router.get('/all/currentArtist', isLoggedIn, (req, res) => {
 	PortfolioImage.find({ artist_id: req.session.currentUser._id })
 		.then(allImages => {
-			if (!allImages || allImages.length <= 0)
+			if (!allImages || allImages.length <= 0) {
 				res.status(400).json({ code: 400, message: 'The current user does not have portfolio images' });
+				return;
+			}
 
 			res.json(allImages);
 		})
@@ -56,8 +60,10 @@ router.get('/all/currentArtist', isLoggedIn, (req, res) => {
 router.get('/all/:user_id', isLoggedIn, (req, res) => {
 	PortfolioImage.find({ artist_id: req.params.user_id })
 		.then(allImages => {
-			if (!allImages || allImages.length <= 0)
+			if (!allImages || allImages.length <= 0) {
 				res.status(400).json({ code: 400, message: 'The specified user does not have portfolio images' });
+				return;
+			}
 
 			res.json(allImages);
 		})
@@ -69,7 +75,10 @@ router.post('/portfolio-image', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 
 	const { _id } = req.session.currentUser;
 
-	if (!img_url || img_url.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A image url is mandatory' });
+	if (!img_url || img_url.match(/^\s*$/)) {
+		res.status(400).json({ code: 400, message: 'A image url is mandatory' });
+		return;
+	}
 
 	PortfolioImage.create({ artist_id: _id, img_url, tags })
 		.then(image => res.json(image))
@@ -80,7 +89,10 @@ router.get('/:image_id', (req, res) => {
 	PortfolioImage.findById(req.params.image_id)
 		.populate({ path: 'artist_id', select: ['portfolio.name', 'portfolio.last_name'] })
 		.then(image => {
-			if (!image) res.status(400).json({ code: 400, message: 'Not found any image for the specified id' });
+			if (!image) {
+				res.status(400).json({ code: 400, message: 'Not found any image for the specified id' });
+				return;
+			}
 
 			res.json(image);
 		})
@@ -97,8 +109,10 @@ router.put('/:image_id', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	PortfolioImage.findOneAndUpdate({ _id: req.params.image_id, artist_id: _id }, { img_url, tags }, { new: true })
 		.populate({ path: 'artist_id', select: ['portfolio.name', 'portfolio.last_name'] })
 		.then(image => {
-			if (!image)
+			if (!image) {
 				res.status(400).json({ code: 400, message: 'There are no images with the specified id for the current user' });
+				return;
+			}
 
 			res.json(image);
 		})
@@ -113,7 +127,10 @@ router.put('/:image_id/like', isLoggedIn, (req, res) => {
 	)
 		// .populate({ path: 'artist_id', select: ['name', 'last_name'] })
 		.then(image => {
-			if (!image) res.status(400).json({ code: 400, message: 'The current user already likes this image' });
+			if (!image) {
+				res.status(400).json({ code: 400, message: 'The current user already likes this image' });
+				return;
+			}
 
 			res.json(image);
 		})
@@ -129,7 +146,10 @@ router.put('/:image_id/dislike', isLoggedIn, (req, res) => {
 		{ new: true }
 	)
 		.then(image => {
-			if (!image) res.status(400).json({ code: 400, message: 'The current user does not like this image already' });
+			if (!image) {
+				res.status(400).json({ code: 400, message: 'The current user does not like this image already' });
+				return;
+			}
 
 			res.json(image);
 		})
@@ -141,7 +161,10 @@ router.put('/:image_id/dislike', isLoggedIn, (req, res) => {
 router.delete('/:image_id', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	PortfolioImage.findOneAndDelete({ _id: req.params.image_id, artist_id: req.session.currentUser._id })
 		.then(image => {
-			if (!image) res.status(400).json({ code: 400, message: 'The specified image did not exist for the current user' });
+			if (!image) {
+				res.status(400).json({ code: 400, message: 'The specified image did not exist for the current user' });
+				return;
+			}
 
 			res.json(image);
 		})

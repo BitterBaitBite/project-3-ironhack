@@ -69,7 +69,6 @@ router.put('/user-portfolio', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 
 	User.findByIdAndUpdate(_id, { portfolio: req.body }, { new: true })
 		.then(user => {
-			console.log(_id, user);
 			req.session.currentUser = user;
 			return res.json(user);
 		})
