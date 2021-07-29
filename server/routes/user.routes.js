@@ -21,10 +21,12 @@ router.put('/user-profile', isLoggedIn, (req, res) => {
 
 	if (username.length <= 0 || username.match(/^\s*$/)) {
 		res.status(400).json({ code: 400, message: 'Username cannot be empty' });
+		return;
 	}
 
 	if (newPassword.length <= 0 || newPassword.match(/^\s*$/)) {
 		res.status(400).json({ code: 400, message: 'Password cannot be empty' });
+		return;
 	}
 
 	User.findOne({ username })
@@ -61,11 +63,11 @@ router.put('/user-profile', isLoggedIn, (req, res) => {
 router.put('/user-portfolio', isLoggedIn, checkRole('ARTIST'), (req, res) => {
 	const { _id } = req.session.currentUser;
 
-	// const { name, last_name } = req.body;
+	const { name, last_name } = req.body;
 
-	// if (!name || name.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A name is mandatory' });
+	if (!name || name.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A name is mandatory' });
 
-	// if (!last_name || last_name.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A last name is mandatory' });
+	if (!last_name || last_name.match(/^\s*$/)) res.status(400).json({ code: 400, message: 'A last name is mandatory' });
 
 	User.findByIdAndUpdate(_id, { portfolio: req.body }, { new: true })
 		.then(user => {

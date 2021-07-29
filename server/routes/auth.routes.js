@@ -12,10 +12,12 @@ router.post('/signup', isLoggedOut, (req, res) => {
 
 	if (username.length <= 0 || username.match(/^\s*$/)) {
 		res.status(400).json({ code: 400, message: 'Username cannot be empty' });
+		return;
 	}
 
 	if (password.length <= 0 || password.match(/^\s*$/)) {
 		res.status(400).json({ code: 400, message: 'Password cannot be empty' });
+		return;
 	}
 
 	User.findOne({ username })
@@ -48,10 +50,12 @@ router.post('/login', isLoggedOut, (req, res) => {
 
 	if (username.length <= 0 || username.match(/^\s*$/)) {
 		res.status(400).json({ code: 400, message: 'Username cannot be empty' });
+		return;
 	}
 
 	if (password.length <= 0 || password.match(/^\s*$/)) {
 		res.status(400).json({ code: 400, message: 'Password cannot be empty' });
+		return;
 	}
 
 	User.findOne({ username })

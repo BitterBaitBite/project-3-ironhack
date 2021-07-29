@@ -21,8 +21,10 @@ router.get('/all', (req, res) => {
 
 	PortfolioImage.find(query)
 		.then(allImages => {
-			if (!allImages) res.status(400).json({ code: 400, message: 'Could not find any portfolio images' });
-			else res.json(allImages);
+			if (!allImages || allImages.length <= 0) {
+				res.status(400).json({ code: 400, message: 'Could not find any portfolio images' });
+				return;
+			} else res.json(allImages);
 		})
 		.catch(err => res.status(500).json({ code: 500, message: 'DDBB error fetching portfolio images', err }));
 });
